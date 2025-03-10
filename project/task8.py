@@ -6,11 +6,12 @@ from project.task2 import graph_to_nfa
 from project.task3 import AdjacencyMatrixFA, intersect_automata
 from scipy.sparse import csr_matrix
 
+
 def tensor_based_cfpq(
-  rsm: RecursiveAutomaton,
-  graph: nx.DiGraph,
-  start_nodes: set[int] = None,
-  final_nodes: set[int] = None,
+    rsm: RecursiveAutomaton,
+    graph: nx.DiGraph,
+    start_nodes: set[int] = None,
+    final_nodes: set[int] = None,
 ) -> set[tuple[int, int]]:
     graph_nfa = graph_to_nfa(nx.MultiDiGraph(graph), start_nodes, final_nodes)
     rsm_nfa = rsm_to_nfa(rsm)
@@ -34,7 +35,9 @@ def tensor_based_cfpq(
 
         for row_index, column_index in zip(*closure.nonzero()):
             row_rsm_state, row_graph_node = intersection.index_to_state[row_index].value
-            column_rsm_state, column_graph_node = intersection.index_to_state[column_index].value
+            column_rsm_state, column_graph_node = intersection.index_to_state[
+                column_index
+            ].value
 
             (row_symbol, row_rsm_node) = row_rsm_state.value
             (column_symbol, column_rsm_node) = column_rsm_state.value
@@ -45,9 +48,9 @@ def tensor_based_cfpq(
                 and row_rsm_node in dfa.start_states
                 and column_rsm_node in dfa.final_states
             ):
-
                 graph_adj.bool_decomposition[row_symbol][
-                    graph_adj.state_to_index[row_graph_node], graph_adj.state_to_index[column_graph_node]
+                    graph_adj.state_to_index[row_graph_node],
+                    graph_adj.state_to_index[column_graph_node],
                 ] = True
 
         prev_nonzero = current_nonzero
@@ -65,12 +68,13 @@ def tensor_based_cfpq(
     return result
 
 
-
 def cfg_to_rsm(cfg: CFG) -> RecursiveAutomaton:
     return ebnf_to_rsm(cfg.to_text())
 
+
 def ebnf_to_rsm(ebnf: str) -> RecursiveAutomaton:
     return RecursiveAutomaton.from_text(ebnf)
+
 
 def rsm_to_nfa(rsm: RecursiveAutomaton) -> NondeterministicFiniteAutomaton:
     nfa = NondeterministicFiniteAutomaton()
@@ -85,6 +89,8 @@ def rsm_to_nfa(rsm: RecursiveAutomaton) -> NondeterministicFiniteAutomaton:
 
         transitions = dfa.to_networkx().edges(data="label")
         for start, final, label in transitions:
-            nfa.add_transition(State((nonterminal, start)), label, State((nonterminal, final)))
+            nfa.add_transition(
+                State((nonterminal, start)), label, State((nonterminal, final))
+            )
 
     return nfa
