@@ -71,11 +71,7 @@ class AdjacencyMatrixFA:
 
         closure = closure.toarray()
 
-        previous_closure = None
-        while not np.array_equal(previous_closure, closure):
-            previous_closure = closure
-            closure = np.dot(closure, closure)
-        return closure
+        return np.linalg.matrix_power(closure, self.number_of_states)
 
     def is_empty(self) -> bool:
         transitive_closure = self.get_transitive_closure()
