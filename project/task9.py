@@ -1,5 +1,5 @@
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Dict, Set, Tuple, TypeVar
 from pyformlang.finite_automaton import Symbol
 import networkx as nx
