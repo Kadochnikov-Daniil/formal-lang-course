@@ -2,9 +2,13 @@ import cfpq_data
 import networkx
 
 
-def get_graph_info(name: str):
+def get_graph_by_name(name: str):
     path = cfpq_data.download(name)
-    graph = cfpq_data.graph_from_csv(path)
+    return cfpq_data.graph_from_csv(path)
+
+
+def get_graph_info(name: str):
+    graph = get_graph_by_name(name)
     return (
         graph.number_of_nodes(),
         graph.number_of_edges(),
